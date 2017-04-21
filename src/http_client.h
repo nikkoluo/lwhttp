@@ -1,10 +1,11 @@
-#ifndef _HTTP_CLIENT_H_
-#define _HTTP_CLIENT_H_
+#ifndef LWHTTP_HTTP_CLIENT_H
+#define LWHTTP_HTTP_CLIENT_H
+
+#include <stdbool.h>
 
 #include "http_message.h"
 #include "http_parser.h"
 #include "tcp_client.h"
-#include <stdbool.h>
 
 typedef struct http_client http_client;
 
@@ -73,4 +74,4 @@ void http_client_add_query(http_client* client, const char* name,
 
 int http_client_execute(http_client* client, http_message* response);
 
-#endif // _HTTP_CLIENT_H_
+#endif // LWHTTP_HTTP_CLIENT_H

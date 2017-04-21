@@ -1,5 +1,5 @@
-#ifndef _HTTP_MESSAGE_
-#define _HTTP_MESSAGE_
+#ifndef LWHTTP_HTTP_MESSAGE_H
+#define LWHTTP_HTTP_MESSAGE_H
 
 #include <stdint.h>
 #include <stdio.h>
@@ -56,4 +56,4 @@ struct uri_query {
 
 size_t uri_query_build(uri_query* query, char* buf, size_t len);
 
-#endif // _HTTP_MESSAGE_
+#endif // LWHTTP_HTTP_MESSAGE_H

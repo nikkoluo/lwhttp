@@ -1,12 +1,15 @@
 #include "http_client.h"
-#include "http_parser.h"
 
 #include <ctype.h>
 #include <string.h>
 
 #define CRLF "\r\n"
 
-#define DEBUG(fmt, ...) printf("%s: " fmt "\r\n", __func__, ##__VA_ARGS__)
+#ifdef _DEBUG
+#define LOGD(fmt, ...) printf("%s: " fmt "\n", __func__, ##__VA_ARGS__)
+#else
+#define LOGD(fmt, ...)
+#endif
 
 void http_client_bind_request(http_client* client, http_message* request)
 {
@@ -199,7 +202,7 @@ int http_client_execute(http_client* client, http_message* response)
         pos += nbytes;
     } while (nbytes > 0 && remains > 0);
 
-    DEBUG("sent count: %ld\n", count);
+    LOGD("sent count: %ld\n", count);
 
     // parser reset
     http_parser_init(&client->parser, HTTP_RESPONSE);
@@ -216,7 +219,7 @@ int http_client_execute(http_client* client, http_message* response)
         count += nbytes;
         pos += nbytes;
     } while (!client->response_complete);
-    DEBUG("recv count: %ld\n", count);
+    LOGD("recv count: %ld\n", count);
 
     tcp_client_close(&client->connector);
     return 0;
@@ -270,22 +273,22 @@ static int on_header_value(http_parser* parser, const char* at, size_t len)
 
 static int on_chunk_header(http_parser* parser)
 {
-    DEBUG("");
+    LOGD("");
     return 0;
 }
 
 static int on_chunk_complete(http_parser* parser)
 {
-    DEBUG("");
+    LOGD("");
     return 0;
 }
 
 static int on_headers_complete(http_parser* parser)
 {
     http_client* client = (http_client*)parser->data;
-    DEBUG("nheaders: %u", client->response->nheaders);
+    LOGD("nheaders: %u", client->response->nheaders);
     if (client->parser.content_length) {
-        DEBUG("content_length: %lu\n", client->parser.content_length);
+        LOGD("content_length: %lu\n", client->parser.content_length);
         client->response->content_length = client->parser.content_length;
     }
     return 0;
@@ -293,7 +296,7 @@ static int on_headers_complete(http_parser* parser)
 
 static int on_message_begin(http_parser* parser)
 {
-    DEBUG("");
+    LOGD("");
     return 0;
 }
 
@@ -302,7 +305,7 @@ static int on_message_complete(http_parser* parser)
     http_client* client = (http_client*)parser->data;
 
     client->response_complete = true;
-    DEBUG("true");
+    LOGD("true");
     return 0;
 }
 
